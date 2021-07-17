@@ -1,0 +1,649 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="现为北京邮电大学研究生一枚">
+  <meta name="author" content="luyanfcp">
+  <meta name="keywords" content="C/C++、Python、Java、准程序员、开源">
+  <title>春季实习冲刺计划：链表交换专题 - luyanfcp的博客</title>
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css">
+  <link rel="stylesheet" href="/lib/hint/hint.min.css">
+
+  
+    
+    
+      
+      <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css">
+    
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script src="/js/utils.js"></script>
+  <script src="/js/color-schema.js"></script>
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">&nbsp;<strong>luyanfcp的blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/assets/img/post_cover/链表交换.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-01-10 19:00" pubdate>
+        2021年1月10日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      17
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">春季实习冲刺计划：链表交换专题</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h2 id="1-基础，一个单链表的交换"><a href="#1-基础，一个单链表的交换" class="headerlink" title="1. 基础，一个单链表的交换"></a>1. 基础，一个单链表的交换</h2><p>这里以<a href="https://leetcode-cn.com/problems/reverse-linked-list/" target="_blank" rel="noopener">Leetcode 206</a> 为例子. </p>
+<blockquote>
+<p>206.反转链表<br>反转一个单链表。</p>
+<p>示例:</p>
+<p>输入: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL<br>输出: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL<br>进阶:<br>你可以迭代或递归地反转链表。你能否用两种方法解决这道题？<br>版权由Leetcode所有，如有侵权，请联系删除</p>
+</blockquote>
+<p>也是一个很基础的模板</p>
+<p>首先说第一种思想：直接使用迭代，然后用头插法的方式，再将所有的Node插入新链表中，因为头插法是反向插入的，因此会起到反转的效果</p>
+<p>这种的思路也很简单</p>
+<ol>
+<li>创建一个None做链表头。</li>
+<li>迭代当前链表，将当前链表的Node插入新链表。</li>
+</ol>
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">reverseList</span><span class="hljs-params">(self, head: ListNode)</span> -&gt; ListNode:</span>
+        <span class="hljs-string">"""
+        迭代
+        """</span>
+        final_list = <span class="hljs-literal">None</span>
+        <span class="hljs-keyword">while</span> head:
+            temp = head.next
+            head.next = final_list
+            final_list = head
+            head = temp
+        <span class="hljs-keyword">return</span> final_list</code></pre>
+<p>其中<code>final_list</code>是新链表的head位置，初始为NULL，然后使用一个<code>while</code>循环去迭代，当前的链表<code>head</code>，然后使用头插法一步一步的将Node插入。</p>
+<p>递归：</p>
+<p>递归的思路主要集中在：</p>
+<ol>
+<li><code>reverseList</code> 将<code>head.next</code>部分的链表反转，例如要反转的链表是<code>[1,2,3,4]</code>, 首先先将<code>[2,3,4]</code>进行反转为<code>[4, 3, 2]</code></li>
+<li>将<code>head</code>放在最后，例如： 然后将<code>[1]</code>放在<code>[4, 3, 2]</code>的后面<code>[4,3,2,1]</code></li>
+</ol>
+<blockquote>
+<p>note: 这个思路有一个问题：如何找到2能捕获2的指针从而完成操作<code>2-&gt;next = 1</code>，最简单的思路是直接去遍历，但是很浪费事件，这里可以直接采用递归体中，先对后面的进行反转，然后再拼接前半部分的顺序，此时<code>[1]</code>的next其实依旧指向<code>[2]</code>，因此我们可以直接这样捕获，避免重新去查找。</p>
+</blockquote>
+<p>形成代码</p>
+<pre><code class="hljs python">
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">reverseList</span><span class="hljs-params">(self, head: ListNode)</span> -&gt; ListNode:</span>
+        <span class="hljs-keyword">if</span> head == <span class="hljs-literal">None</span> <span class="hljs-keyword">or</span> head.next == <span class="hljs-literal">None</span>:  <span class="hljs-comment"># 防止出现None指针操作</span>
+            <span class="hljs-keyword">return</span> head
+        p = self.reverseList(head.next)
+        head.next.next = head
+        head.next = <span class="hljs-literal">None</span>
+        <span class="hljs-keyword">return</span> p</code></pre>
+<h2 id="2-进一步提升，如果要两两替换呢？"><a href="#2-进一步提升，如果要两两替换呢？" class="headerlink" title="2. 进一步提升，如果要两两替换呢？"></a>2. 进一步提升，如果要两两替换呢？</h2><p>这里使用<a href="https://leetcode-cn.com/problems/swap-nodes-in-pairs/" target="_blank" rel="noopener">Leetcode 24</a>来说明这个问题。</p>
+<blockquote>
+<p>24.两两交换链表中的节点<br>给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。</p>
+<p>你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。<br><img src="//luyanfcp.github.io/2021/01/10/链表交换/swap_ex1.jpg" srcset="/img/loading.gif" alt></p>
+<p>输入：head = [1,2,3,4]<br>输出：[2,1,4,3]<br>示例 2：</p>
+<p>输入：head = []<br>输出：[]<br>示例 3：</p>
+<p>输入：head = [1]<br>输出：[1]</p>
+<p>提示：</p>
+<p>链表中节点的数目在范围 [0, 100] 内<br>0 &lt;= Node.val &lt;= 100</p>
+<p>来源：力扣（LeetCode）<br>链接：<a href="https://leetcode-cn.com/problems/swap-nodes-in-pairs" target="_blank" rel="noopener">https://leetcode-cn.com/problems/swap-nodes-in-pairs</a><br>著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。</p>
+</blockquote>
+<p>这个依旧分为两个思路：迭代和递归</p>
+<p>迭代：向后移动两个指针然后交换</p>
+<p>迭代这里给两个版本</p>
+<ol>
+<li><p>需要使用指针的指针进行操作，因为需要获取到两个节点中前一个节点中的前一个节点的指针，在<code>python</code>中一般使用一个临时节点来充当指针的指针例如很多题解中的<code>dummy = ListNode(-1)</code>，另一方面也是增加一个头节点方便操作。如果是<code>C/C++</code>即可直接使用<code>**ListNode</code></p>
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">swapPairs</span><span class="hljs-params">(self, head: ListNode)</span> -&gt; ListNode:</span>
+        head_pointer = ListNode(<span class="hljs-number">-1</span>) <span class="hljs-comment"># 指针的指针，头节点</span>
+        pre = head_pointer 
+        pre.next = head
+        first, second = <span class="hljs-literal">None</span>, <span class="hljs-literal">None</span>  <span class="hljs-comment"># 两个节点中的第一个节点和第二个节点</span>
+        <span class="hljs-keyword">while</span> head <span class="hljs-keyword">and</span> head.next:   <span class="hljs-comment"># next 为 null即可退出</span>
+            first = head
+            second = head.next
+            pre.next = second       <span class="hljs-comment">#交换两节点</span>
+            first.next = second.next
+            second.next = first
+
+            pre = first             <span class="hljs-comment">#继续遍历后续节点</span>
+            head = first.next
+        <span class="hljs-keyword">return</span> head_pointer.next</code></pre>
+</li>
+<li><p>直接进行值交换</p>
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">swapPairs</span><span class="hljs-params">(self, head: ListNode)</span> -&gt; ListNode:</span>
+        <span class="hljs-keyword">if</span> head == <span class="hljs-literal">None</span>:
+            <span class="hljs-keyword">return</span> head
+        
+        first, second = head, head.next
+        <span class="hljs-keyword">while</span> second != <span class="hljs-literal">None</span>:
+            first.val, second.val = second.val, first.val
+
+            first = second.next
+            <span class="hljs-keyword">if</span> first == <span class="hljs-literal">None</span>:
+                <span class="hljs-keyword">break</span>
+            second = first.next
+        
+        <span class="hljs-keyword">return</span> head</code></pre>
+</li>
+</ol>
+<p>递归：向前移动两个指针，先将后半部分交换，再将当前位置交换，然后拼接.</p>
+<pre><code class="hljs python"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">swapPairs</span><span class="hljs-params">(self, head: ListNode)</span> -&gt; ListNode:</span>
+        <span class="hljs-keyword">if</span> head == <span class="hljs-literal">None</span> <span class="hljs-keyword">or</span> head.next == <span class="hljs-literal">None</span>:
+            <span class="hljs-keyword">return</span> head
+        next_node = head.next
+        head.next = self.swapPairs(next_node.next)
+        next_node.next = head
+        <span class="hljs-keyword">return</span> next_node</code></pre>
+<h2 id="3-任意顺序的K个节点交换"><a href="#3-任意顺序的K个节点交换" class="headerlink" title="3. 任意顺序的K个节点交换"></a>3. 任意顺序的K个节点交换</h2><p>这里使用，<a href="https://leetcode-cn.com/problems/reverse-nodes-in-k-group/" target="_blank" rel="noopener">Leetcode25 K个一组翻转链表</a>作为例子。</p>
+<p>由于K个交换过于复杂，这里没有采用迭代的思路，因为迭代的思路需要使用栈存储便利后的一些节点。使用递归思路和代码都比较简答。</p>
+<p>首先将问题分为两个部分：</p>
+<ol>
+<li>K个节点如何交换。这个其实可以转化为问题1，直接套用问题一的模板即可。</li>
+<li>判断k个节点的范围。</li>
+</ol>
+<pre><code class="hljs python">
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">swap</span><span class="hljs-params">(head: ListNode)</span>:</span>
+        final_list = <span class="hljs-literal">None</span>
+        <span class="hljs-keyword">while</span> head:
+            temp = head.next
+            head.next = final_list
+            final_list = head
+            head = temp
+
+        <span class="hljs-keyword">return</span> final_list 
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Solution</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">reverseKGroup</span><span class="hljs-params">(self, head: ListNode, k: int)</span> -&gt; ListNode:</span>
+        <span class="hljs-keyword">if</span> k == <span class="hljs-number">1</span> <span class="hljs-keyword">or</span> head == <span class="hljs-literal">None</span>:
+            <span class="hljs-keyword">return</span> head
+
+        end = head
+        <span class="hljs-comment"># 向后找k个节点</span>
+        <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(k<span class="hljs-number">-1</span>):
+            end = end.next  <span class="hljs-comment"># 向后的</span>
+            <span class="hljs-keyword">if</span> end == <span class="hljs-literal">None</span>:
+                <span class="hljs-keyword">return</span> head
+        end_next = end.next
+        <span class="hljs-comment"># end之后置空，方便swap函数进行判断</span>
+        end.next = <span class="hljs-literal">None</span>
+        <span class="hljs-comment"># 交换一下</span>
+        swap(head)
+        <span class="hljs-comment"># 拼起来</span>
+        head.next = self.reverseKGroup(end_next, k)</code></pre>
+<p>时间复杂度为<code>O(n)</code>刚好扫描过所有的链表。空间复杂度由于是递归的问题存在一定的递归栈空间复杂度是<code>O(n/k)</code></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Leetcode/">Leetcode</a>
+                    
+                      <a class="hover-with-bg" href="/tags/数据结构/">数据结构</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/07/18/hello-world/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/">
+                        <span class="hidden-mobile">AIOPS笔记：GNN在异常检测上的应用论文（一）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="/js/debouncer.js"></script>
+<script src="/js/main.js"></script>
+
+<!-- Plugins -->
+
+
+  
+    <script src="/js/lazyload.js"></script>
+  
+
+
+
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script>
+  <script src="/js/clipboard-use.js"></script>
+
+
+
+
+
+
+
+  <script src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "春季实习冲刺计划：链表交换专题&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js"></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js"></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

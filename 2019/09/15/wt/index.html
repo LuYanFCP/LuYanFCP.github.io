@@ -1,0 +1,640 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="现为北京邮电大学研究生一枚">
+  <meta name="author" content="luyanfcp">
+  <meta name="keywords" content="C/C++、Python、Java、准程序员、开源">
+  <title>WindowsTerminal尝鲜踩坑 - luyanfcp的博客</title>
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css">
+  <link rel="stylesheet" href="/lib/hint/hint.min.css">
+
+  
+    
+    
+      
+      <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css">
+    
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script src="/js/utils.js"></script>
+  <script src="/js/color-schema.js"></script>
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">&nbsp;<strong>luyanfcp的blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-09-15 17:20" pubdate>
+        2019年9月15日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">WindowsTerminal尝鲜踩坑</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h1 id="WindowsTerminal尝鲜踩坑"><a href="#WindowsTerminal尝鲜踩坑" class="headerlink" title="WindowsTerminal尝鲜踩坑"></a>WindowsTerminal尝鲜踩坑</h1><h2 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h2><p>WindowsTerminal是微软新发布的一款Terminal产品（以下称），对比之前传统的<code>CMD</code>和<code>Powershell</code>来说，<code>WT</code>对定制的支持更好，同时又支持GPU对页面的渲染、emoj表情、多标签等的特点。<br>其项目地址为：<a href="https://github.com/microsoft/terminal" target="_blank" rel="noopener">https://github.com/microsoft/terminal</a></p>
+<p>官方演示图片如下：<br><img src="//luyanfcp.github.io/2019/09/15/wt/1.png" srcset="/img/loading.gif" alt><br><img src="//luyanfcp.github.io/2019/09/15/wt/2.jpg" srcset="/img/loading.gif" alt></p>
+<h2 id="如何获取"><a href="#如何获取" class="headerlink" title="如何获取"></a>如何获取</h2><p>现在<code>WT</code>仍然处于开发阶段，但是官方还是放出了一个preview的版本可以通过<code>Window Store</code>下载（ 链接：<a href="https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701" target="_blank" rel="noopener">https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701</a> ），也可以通过将<code>github</code>上的项目clone之后编译。</p>
+<p><strong>但是无论是编译还是在官方下载的，都需要将window升级到1903</strong></p>
+<h3 id="自己编译"><a href="#自己编译" class="headerlink" title="自己编译"></a>自己编译</h3><p>编译条件：</p>
+<ul>
+<li>在window中 设置-更新-开发者选项中中选择开发者模式</li>
+<li>VS2017 或者 VS2019</li>
+<li>Win10 SDK 10.018362（最新版SDK即可）</li>
+<li>.net桌面开发</li>
+<li>C++桌面开发</li>
+<li>通用windows平台开发</li>
+</ul>
+<p>在进入VS的时候如果缺少哪一个，解决方案上方会有提示，直接按照上面的提示安装即可。</p>
+<p>编译过程</p>
+<ol>
+<li>首先将项目使用<code>git clone https://github.com/microsoft/terminal.git</code>克隆本地</li>
+<li>直接在该文件中双击<code>OpenConsole.sln</code>，在VS中打开</li>
+<li>将调整为<img src="//luyanfcp.github.io/2019/09/15/wt/3.png" srcset="/img/loading.gif" alt>，在本地计算机中运行即可</li>
+<li>如果想部署到电脑点击解决方案中的<code>Terminal/CascadiaPackage</code>右击生成、然后再右击部署即可。</li>
+</ol>
+<h2 id="如何定制一个属于自己的Terminal"><a href="#如何定制一个属于自己的Terminal" class="headerlink" title="如何定制一个属于自己的Terminal"></a>如何定制一个属于自己的Terminal</h2><p>新的<code>WT</code>最大的优点是相对与<code>Windows</code>之前的Terminal多了一些可定制性。设置主要分成四种</p>
+<ol>
+<li>快捷键的设置</li>
+<li>shell</li>
+<li>页面</li>
+<li>配色</li>
+</ol>
+<h3 id="profiles-json文件"><a href="#profiles-json文件" class="headerlink" title="profiles.json文件"></a>profiles.json文件</h3><p>Terminal的设置是一个json文件，名字为<code>profiles.json</code>中。此文件可以通过<code>WT</code>的下拉菜单的<code>setting</code>中。此文件位于<code>%USERDIR\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\RoamingState</code>中（preview）或者<code>%USERDIR\AppData\Local\Packages\WindowsTerminalDev_8wekyb3d8bbwe\RoamingState\profiles.json</code>中（自己编译和部署的），其中<code>%USERDIR</code>为用户目录。</p>
+<blockquote>
+<p>踩坑指南:</p>
+<p>如果profiles.json中有配置错误的地方Terminal就会无法打开，这个BUG现在修复中。因此如果无法打开Terminal的话，首先要检查profiles.json中是否有配置错误的地方，尤其小心字母打错。</p>
+<p>还有就是如果preview版本的配置会同步到Windows账户，如果在其他的电脑上下载的WT的preview版本，但是无法打开时，就要检查profiles.json中的字体和图片是否是正确的或者是否存在这个字体和图片。<br>还有就是使用WinAPP的清除配置的方式清除配置无法清除profiles.json</p>
+</blockquote>
+<h4 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h4><p>此处采用key-value模式进行设置，在json中设置如下：<br>其中command有如下的种类：</p>
+<pre><code class="hljs c#">enum class ShortcutAction : int32_t
+    &#123;
+        CopyText = 0,
+        PasteText = 1,
+        NewTab = 2,
+        NewTabProfile0 = 3,
+        NewTabProfile1 = 4,
+        NewTabProfile2 = 5,
+        NewTabProfile3 = 6,
+        NewTabProfile4 = 7,
+        NewTabProfile5 = 8,
+        NewTabProfile6 = 9,
+        NewTabProfile7 = 10,
+        NewTabProfile8 = 11,
+        NewWindow = 12,
+        CloseWindow = 13,
+        CloseTab = 14,
+        NextTab = 15,
+        PrevTab = 16,
+        SplitVertical = 17,
+        SplitHorizontal = 18,
+        SwitchToTab0 = 19,
+        SwitchToTab1 = 20,
+        SwitchToTab2 = 21,
+        SwitchToTab3 = 22,
+        SwitchToTab4 = 23,
+        SwitchToTab5 = 24,
+        SwitchToTab6 = 25,
+        SwitchToTab7 = 26,
+        SwitchToTab8 = 27,
+        IncreaseFontSize = 28,
+        DecreaseFontSize = 29,
+        ScrollUp = 30,
+        ScrollDown = 31,
+        ScrollUpPage = 32,
+        ScrollDownPage = 33,
+        OpenSettings = 34,
+    &#125;;</code></pre>
+<p>在<code>profiles.json</code>中的配置</p>
+<pre><code class="hljs json">"keybindings" :
+        [
+            &#123;
+                "command" : "closeTab", // 这里是命令
+                "keys" :  // 这是快捷键
+                [
+                    "ctrl+w"
+                ]
+            &#125;
+        ]</code></pre>
+<h3 id="页面的配置"><a href="#页面的配置" class="headerlink" title="页面的配置"></a>页面的配置</h3><p>页面配置主要分为全局页面配置和每一个profile的页面配置</p>
+<h4 id="全局页面配置"><a href="#全局页面配置" class="headerlink" title="全局页面配置"></a>全局页面配置</h4><p>全局页面设置常用的主要为: </p>
+<ul>
+<li>设置窗口大小，使用 <code>initialCols</code> 和 <code>initialRows</code></li>
+<li>默认打开的Shell，通过使用<code>defaultProfile</code>，它的参数为一个string类型的guid，每一个profile都有自己的guid，格式为<code>&quot;{00000000-0000-0000-0000-000000000000}&quot;</code><br>例如在我的配置中<pre><code class="hljs json">&#123;
+    <span class="hljs-attr">"globals"</span>: &#123;
+        <span class="hljs-attr">"defaultProfile"</span> :<span class="hljs-string">"&#123;61c54bbd-c2c6-5271-96e7-009a87ff44bf&#125;"</span>,
+    &#125;,
+    <span class="hljs-attr">"profiles"</span>: [
+        &#123;
+            <span class="hljs-attr">"commandline"</span> : <span class="hljs-string">"powershell.exe"</span>,
+            <span class="hljs-attr">"guid"</span> : <span class="hljs-string">"&#123;61c54bbd-c2c6-5271-96e7-009a87ff44bf&#125;"</span>
+        &#125;
+    ]
+&#125;</code></pre>
+</li>
+</ul>
+<p>这样无论是直接打开<code>WT</code>还是按<code>+</code>按钮打开一个新的tab都默认是的<code>powershell</code></p>
+<h4 id="页面配置"><a href="#页面配置" class="headerlink" title="页面配置"></a>页面配置</h4><pre><code class="hljs json">&#123;
+    "acrylicOpacity" : 0.5, // 透明度
+    "closeOnExit" : true,
+    "colorScheme" : "Campbell", //主题
+    "commandline" : "wsl.exe -d Ubuntu-18.04", // 启动shell的命令
+    "cursorColor" : "#FFFFFF", // 光标的颜色
+    "cursorShape" : "bar", //光标的形状，变量有 "vintage" ( ▃ ), "bar" ( ┃ ), "underscore" ( ▁ ), "filledBox" ( █ ), "emptyBox" ( ▯ )
+    "fontFace" : "Fira Code", // 字体设置
+    "background" : "#000000", // 背景颜色， 它会覆盖掉主题中的background 
+    "fontSize" : 15, // 字体大小
+    "guid" : "&#123;c6eaf9f4-32a7-5fdc-b5cf-066e8a4b1e40&#125;", // guid 必须为"&#123;00000000-0000-0000-0000-000000000000&#125;"格式
+    "historySize" : 9001, // 能显示的历史命令个数
+    "icon" : "ms-appx:///ProfileIcons/&#123;9acb9455-ca41-5af7-950f-6bca1bc9722f&#125;.png", 
+    "name" : "Ubuntu-18.04", // 名称，显示在菜单中
+    "padding" : "0, 0, 0, 0",
+    "snapOnInput" : true,
+    "useAcrylic" : false, // 是否显示背后的纹理
+    "backgroundImage" : "ms-appdata:///roaming/test.jpg", // 图片的一个路径,需要绝对路径
+    "backgroundImageOpacity" : 0.75,  // 背景图的透明度
+    "backgroundImageStrechMode" : "fill" // 填充方式
+
+&#125;</code></pre>
+<p>这里要特别注意三个设置</p>
+<ol>
+<li><code>background</code> 如果在<code>profile</code>中设置的话会覆盖<code>theme</code>中的<code>background</code>。</li>
+<li><code>acrylicOpacity</code>这个属性生效的前提是<code>useAcrylic</code>的值为<code>true</code></li>
+<li><code>backgroundImage</code> 等属性生效的前提是<code>useAcrylic</code>的值为<code>false</code></li>
+</ol>
+<p><strong><code>useAcrylic</code> 这个属性是决定能不能通过页面去显示页面后的内容</strong><br>例如：<br>当<code>&quot;useAcrylic&quot; : true</code>时，效果如下</p>
+<p><img src="//luyanfcp.github.io/2019/09/15/wt/4.png" srcset="/img/loading.gif" alt><br>此时可以通过<code>acrylicOpacity</code>去调节透明度。此时背景图片的设置就无法实现。如果要设置背景图片的话使用<code>&quot;useAcrylic&quot; : false</code>再进行设置</p>
+<h3 id="主题配置"><a href="#主题配置" class="headerlink" title="主题配置"></a>主题配置</h3><p>主题的配置在<code>profiles.json</code>文件中的<code>schemes</code>属性中,官方为我们提供了<code>Campbell、One Half Dark、One Half Light、Solarized Dark、Solarized Light</code>五种默认的主题。我们可以在profiles中直接设置使用。</p>
+<p>我们也可以自建主题，相关的配置参数如下：</p>
+<p><img src="//luyanfcp.github.io/2019/09/15/wt/5.png" srcset="/img/loading.gif" alt></p>
+<p>同时官方又给我们提供<code>ColorTool</code>工具帮助我们更快的设置主题颜色，<code>ColorTool</code>可以直接使用<code>iterm2</code>的配色文件，因此能够让我们更多样的选择主题。</p>
+<p>但博主无法使用改工具对<code>WT</code>的配色进行修改，找了<code>issue</code>和各种资料均为找到答案。可能是<code>ColorTool</code>尚未实现对<code>WT</code>的操作，只实现了对<code>CMD</code>、<code>PowerShell</code>、<code>WSL</code>的操作。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/terminal/">terminal</a>
+                    
+                      <a class="hover-with-bg" href="/tags/win/">win</a>
+                    
+                      <a class="hover-with-bg" href="/tags/工具/">工具</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/09/15/ModelCompression/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">《A Survey of Model Compression and Acceleration for Deep Neural Networks》笔记</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="/js/debouncer.js"></script>
+<script src="/js/main.js"></script>
+
+<!-- Plugins -->
+
+
+  
+    <script src="/js/lazyload.js"></script>
+  
+
+
+
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script>
+  <script src="/js/clipboard-use.js"></script>
+
+
+
+
+
+
+
+  <script src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "WindowsTerminal尝鲜踩坑&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js"></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js"></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

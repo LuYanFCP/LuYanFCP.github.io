@@ -1,0 +1,607 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="现为北京邮电大学研究生一枚">
+  <meta name="author" content="luyanfcp">
+  <meta name="keywords" content="C/C++、Python、Java、准程序员、开源">
+  <title>AIOPS笔记：GNN在异常检测上的应用论文（一） - luyanfcp的博客</title>
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css">
+  <link rel="stylesheet" href="/lib/hint/hint.min.css">
+
+  
+    
+    
+      
+      <link rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/github-gist.min.css">
+    
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_pf9vaxs7x7b.css">
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script src="/js/utils.js"></script>
+  <script src="/js/color-schema.js"></script>
+</head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">&nbsp;<strong>luyanfcp的blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner intro-2" id="background" parallax=true
+         style="background: url('/assets/img/post_cover/GNN异常检测1.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container page-header text-center fade-in-up">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-21 19:00" pubdate>
+        2020年11月21日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      12
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto" id="post">
+            <!-- SEO header -->
+            <h1 style="display: none">AIOPS笔记：GNN在异常检测上的应用论文（一）</h1>
+            
+            <div class="markdown-body" id="post-body">
+              <h2 id="《A-Spatiotemporal-Deep-Learning-Approach-for-Unsupervised-Anomaly-Detection-in-Cloud-Systems》-笔记"><a href="#《A-Spatiotemporal-Deep-Learning-Approach-for-Unsupervised-Anomaly-Detection-in-Cloud-Systems》-笔记" class="headerlink" title="《A Spatiotemporal Deep Learning Approach for Unsupervised Anomaly Detection in Cloud Systems》 笔记"></a>《A Spatiotemporal Deep Learning Approach for Unsupervised Anomaly Detection in Cloud Systems》 笔记</h2><p>论文地址：<a href="https://ieeexplore.ieee.org/document/9228885/" target="_blank" rel="noopener">https://ieeexplore.ieee.org/document/9228885/</a></p>
+<p>论文数据集：<a href="https://github.com/QAZASDEDC/TopoMAD" target="_blank" rel="noopener">https://github.com/QAZASDEDC/TopoMAD</a></p>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><ul>
+<li><p>解决的问题场景：大规模云系统的中的异常检测问题。</p>
+</li>
+<li><p>引入GNN的角度：</p>
+<ul>
+<li>考虑单一的Metirc可以提供单个层面级别的信息，而考虑组件的多种Metric可以提供组件级别的信息。</li>
+<li><strong>各组成部分的相互作用关系。</strong></li>
+<li><strong>拓扑信息的输入和组件级的输入构成了系统级的信息，可以更全面地了解整个运行系统。</strong></li>
+</ul>
+</li>
+<li>传统DNN方法的弊端：<ol>
+<li>在决定组件是否处于异常状态时，有时需要考虑其连接的组件（一般DNN做不到）。</li>
+<li>随着云系统复杂性的增加，为每个组件训练和维护单个模型的难度将越来越大。（尤其在微服务场景中，指标的数量成指数级增长，及其难维护）。</li>
+<li>粗略地将整个系统看作一个笨重的组件会失去对其内部拓扑结构的洞察，从而可能增加对其正常行为建模的难度。</li>
+</ol>
+</li>
+</ul>
+<h3 id="motivation"><a href="#motivation" class="headerlink" title="motivation"></a>motivation</h3><ol>
+<li><p>增加拓扑信息的好处：</p>
+<ul>
+<li><p>图神经网络的特征提取器共享于来自不同组件的同类指标之间，有助于在统一的特征学习下捕获相同指标类型之间的相似模式。</p>
+</li>
+<li><p>端到端的引入拓扑的影响。</p>
+</li>
+<li>拓扑信息可以引导模型将注意力集中在现实中具有直接连接和交互的组件上，这有助于防止模型的过拟合（GAT）。</li>
+</ul>
+</li>
+<li><p>引入了无监督选择检测阈值的方法：</p>
+<ul>
+<li>过去的方法，类似DAGMM等，需要大量的阈值调参。在这里本论文引入无监督的模型来生成阈值，从而减少模型的调参难度。</li>
+</ul>
+</li>
+</ol>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/1.png" srcset="/img/loading.gif" alt="image-20201120223734359"></p>
+<p>总体设计如上图</p>
+<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/2.png" srcset="/img/loading.gif" alt="image-20201120223940091"></p>
+<p>数据分为两类：</p>
+<ol>
+<li>$X$ 为指标矩阵，横坐标是节点（Node），纵坐标是指标（Metric）。</li>
+<li>$E$ 为连接矩阵，主要是<code>edge</code>的向量矩阵，每个<code>edge</code>为$E$的一个列向量。</li>
+</ol>
+<h3 id="模型设计"><a href="#模型设计" class="headerlink" title="模型设计"></a>模型设计</h3><p>模型在VAE和seq2seq的基础上进行设计：</p>
+<ul>
+<li>VAE因为其生成模型的特点，常作为异常检测的方法（生成模型能估计联合概率密度）。</li>
+<li>Seq2Seq结构出自NLP领域，常用于序列建模，这也跟我们要处理的时间序列不谋而合。</li>
+<li>在这两个模型的基础上，引入Graph 网络对拓扑信息进行学习。</li>
+</ul>
+<h4 id="1-GraphLSTM"><a href="#1-GraphLSTM" class="headerlink" title="1. GraphLSTM"></a>1. GraphLSTM</h4><p>GraphLSTM的主要思路是将LSTM中的全连接网络之前增加一个GNN，对拓扑信息和指标信息进行融合。</p>
+<p>下面是两种LSTM的比较</p>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/Graph_LSTM.png" srcset="/img/loading.gif" alt="GraphLSTM"></p>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/traditional_LSTM.png" srcset="/img/loading.gif" alt="原有的LSTM"></p>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/Graph_LSTM_function.png" srcset="/img/loading.gif" alt="公式"></p>
+<p>红框部分是由标准的LSTM中的$[h<em>{t-1}, x_t]$替换为$g([h</em>{t-1},x_t], E)$, 也就在之前添加了GNN作为拓扑信息和Metric信息的融合层，融合之后作为标准LSTM的输入。</p>
+<h4 id="2-TopoMAD"><a href="#2-TopoMAD" class="headerlink" title="2. TopoMAD"></a>2. TopoMAD</h4><p>之后论文提出了由<code>GraphLSTM</code>单元组成的<code>Seq2Seq+VAE</code> 的模型。在训练和推理阶段的结构如下图：</p>
+<p>训练阶段：</p>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/training.png" srcset="/img/loading.gif" alt="TopoMAD training stage"></p>
+<p>推理阶段：</p>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/inference.png" srcset="/img/loading.gif" alt="TopoMAD inference stage"></p>
+<p>训练的时候<code>decoder</code>有$\lambda$的可能用原始输入$X$、$1-\lambda$使用重构后的值$X’$。（scheduled sampling process）</p>
+<ul>
+<li>初始化的时候$\lambda$=1之后当val loss不减少的时候, $\lambda$减半。</li>
+</ul>
+<p><strong>Loss</strong> 采用VAE的ELBO Loss结构：</p>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/ELBO-loss.png" srcset="/img/loading.gif" alt="ELBO Loss"></p>
+<h4 id="3-计算异常得分"><a href="#3-计算异常得分" class="headerlink" title="3. 计算异常得分"></a>3. 计算异常得分</h4><script type="math/tex; mode=display">
+\operatorname{temp} S_{t}=-\mathbf{E}_{q_{\phi}\left(z_{t} \mid X_{t_{0}: t}\right)}\left(\log \left(p_{\theta}\left(X_{t} \mid z_{t}\right)\right)\right)</script><script type="math/tex; mode=display">
+S_{t}=-\frac{1}{L * D} \sum_{d=0}^{D-1} \sum_{l=1}^{L} \log \left(p_{\theta}\left(X_{t} \mid z_{t+d}^{(l)}, X_{t+1: t+d}\right)\right)</script><p>使用重构误差做为异常得分的计算：这种思想源于<em>《Variational Autoencoder based Anomaly Detection using Reconstruction Probability》</em>。其中$L$是采样数量，$D$是计算或更新一个异常分数的次数(the tolerance of detection delay)。</p>
+<p>但是在某些情况下，<strong>在某些情况下，系统中某个特定组件的相对较低的重构概率就足让我们将其判断为异常</strong>。 因此，我们还从组件角度计算异常分数，如下所示：</p>
+<script type="math/tex; mode=display">
+S_{t}=-\max _{0 \leq i<N} \frac{1}{L * D} \sum_{d=0}^{D-1} \sum_{l=1}^{L} \log \left(p_{\theta}\left(X_{t}^{i} \mid z_{t+d}^{(l)}, X_{t+1: t+d}\right)\right)</script><p>也就是组件级别的异常。</p>
+<h4 id="4-阈值的选择："><a href="#4-阈值的选择：" class="headerlink" title="4. 阈值的选择："></a>4. 阈值的选择：</h4><p>本文提出的阈值选择一种阈值选择方法，假设正常数据的异常分数位于密度较高的区域，异常数据的异常分数位于密度较低的区域。</p>
+<script type="math/tex; mode=display">
+d\left(S_{<\tau}, S_{>\tau}\right)=\frac{\min \left(S_{>\tau}\right)-\max \left(S_{<\tau}\right)}{\min \left(S_{>\tau}\right)+\max \left(S_{<\tau}\right)-2 * \min \left(S_{<\tau}\right)}</script><p>基于这一假设，选择一个阈值，使该阈值从训练数据集中切割出的两个集合与一个算子提供的范围之间的距离最大化。</p>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><h4 id="总体上跟其他方法的对比"><a href="#总体上跟其他方法的对比" class="headerlink" title="总体上跟其他方法的对比"></a>总体上跟其他方法的对比</h4><p>本文实验使用了两个数据集，MBD（一个批处理的数据集）、NMS（微服务场景的数据集）。TopoMAD均好于传统方法。</p>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/exp1.png" srcset="/img/loading.gif" alt="Comparative Experiment 1"></p>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/exp2.png" srcset="/img/loading.gif" alt="Comparative Experiment 2"></p>
+<h4 id="鲁棒性"><a href="#鲁棒性" class="headerlink" title="鲁棒性"></a>鲁棒性</h4><p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/robustness_exp.png" srcset="/img/loading.gif" alt="Robustness Experiment"></p>
+<h4 id="可解释性"><a href="#可解释性" class="headerlink" title="可解释性"></a>可解释性</h4><p>异常的隐变量和真实的隐变量差距不大，因此VAE不会重构异常。</p>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/Interpretability_exp.png" srcset="/img/loading.gif" alt="Interpretability Experiment"></p>
+<h4 id="消融实验"><a href="#消融实验" class="headerlink" title="消融实验"></a>消融实验</h4><p><strong>空间信息的作用</strong>：</p>
+<p>实验方法是将$E$矩阵随机化，这样会混淆空间信息。结果表示在混淆空间信息之后，点数会有下降。</p>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/Ablation_exp.png" srcset="/img/loading.gif" alt="Ablation Experiment Result1"></p>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/Ablation_exp2.png" srcset="/img/loading.gif" alt="Ablation Experiment Result2"></p>
+<h4 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h4><p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/complexity.png" srcset="/img/loading.gif" alt="complexity"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本论文主要的目标是将拓扑信息融入到系统检测的过程中</p>
+<ul>
+<li>在传统的LSTM中使用GNN的方法引入了拓扑的信息。</li>
+<li>VAE+Seq2Seq的形式，增加模型的学习能力。</li>
+</ul>
+<p>本文还有另外的一个特点就是论文的写作风格特别好（在实验部分使用QA的方式来阐述实验的各个部分），实验做的非常非常全。</p>
+<p><img src="//luyanfcp.github.io/2020/11/21/2020-11-21-AIOPS笔记：GNN在异常检测上的应用论文（一）/questions.png" srcset="/img/loading.gif" alt="paper"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="noopener">https://colah.github.io/posts/2015-08-Understanding-LSTMs/</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/论文/">论文</a>
+                    
+                      <a class="hover-with-bg" href="/tags/笔记/">笔记</a>
+                    
+                      <a class="hover-with-bg" href="/tags/深度学习/">深度学习</a>
+                    
+                      <a class="hover-with-bg" href="/tags/GNN/">GNN</a>
+                    
+                      <a class="hover-with-bg" href="/tags/异常检测/">异常检测</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/01/10/链表交换/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">春季实习冲刺计划：链表交换专题</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/10/11/git笔记/">
+                        <span class="hidden-mobile">Git笔记</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="/js/debouncer.js"></script>
+<script src="/js/main.js"></script>
+
+<!-- Plugins -->
+
+
+  
+    <script src="/js/lazyload.js"></script>
+  
+
+
+
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js"></script>
+  <script src="/js/clipboard-use.js"></script>
+
+
+
+
+
+
+
+  <script src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '#post-body',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js"></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "AIOPS笔记：GNN在异常检测上的应用论文（一）&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js"></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script src="/js/local-search.js"></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css">
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.staticfile.org/mathjax/3.0.5/es5/tex-svg.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
